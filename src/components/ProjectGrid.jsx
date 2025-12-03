@@ -3,21 +3,25 @@ import ProjectCard from './ProjectCard';
 
 const projects = [
     {
+        id: 'elfbar',
         title: 'Elfbar',
         category: 'Marketing & Branding',
-        image: '' // Will add placeholder or generated image later
+        image: ''
     },
     {
+        id: 'lostmary',
         title: 'Lostmary',
         category: 'Product Showcase',
         image: ''
     },
     {
+        id: 'karu-learning',
         title: 'Karu Learning',
         category: 'EdTech Platform',
         image: ''
     },
     {
+        id: 'boltbot-app',
         title: 'Boltbot.app',
         category: 'AI Application',
         image: ''
@@ -37,7 +41,7 @@ const ProjectGrid = () => {
                 gap: '4rem 2rem'
             }}>
                 {projects.map((project, index) => (
-                    <ProjectCard key={index} {...project} index={index} />
+                    <ProjectCard key={project.id} {...project} index={index} />
                 ))}
             </div>
         </section>
