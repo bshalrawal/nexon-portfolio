@@ -1,24 +1,24 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const ProjectCard = ({ id, title, category, image, index }) => {
     return (
-        <Link to={`/project/${id}`}>
+        <Link href={`/project/${id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                style={{ marginBottom: '4rem', cursor: 'pointer' }}
+                style={{ cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column' }}
             >
                 <motion.div
                     whileHover={{ scale: 0.98 }}
                     transition={{ duration: 0.4 }}
                     style={{
                         width: '100%',
-                        aspectRatio: '4/3',
+                        flex: 1,
                         backgroundColor: '#1a1a1a',
                         borderRadius: '4px',
                         overflow: 'hidden',

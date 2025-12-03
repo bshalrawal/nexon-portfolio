@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const Header = () => {
     return (
@@ -21,9 +24,11 @@ const Header = () => {
                 color: 'white'
             }}
         >
-            <div style={{ fontWeight: 700, fontSize: '1.2rem', fontFamily: 'var(--font-heading)' }}>
-                NEXONINC.TECH
-            </div>
+            <Link href="/" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                <div style={{ fontWeight: 700, fontSize: '1.2rem', fontFamily: 'var(--font-heading)' }}>
+                    NEXONINC.TECH
+                </div>
+            </Link>
             <nav>
                 <a href="#contact" style={{ fontSize: '0.9rem', fontWeight: 500 }}>
                     Let's Collaborate
