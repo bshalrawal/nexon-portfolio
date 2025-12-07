@@ -1,10 +1,22 @@
 # Admin Setup Instructions
 
-## Creating an Admin User
+## Local Development Setup
+
+### Creating an Admin User Locally
 
 Since the seed script uses CommonJS but the project uses ES modules, you'll need to create the admin user manually using one of these methods:
 
-### Method 1: Using Prisma Studio (Recommended)
+#### Method 1: Using the provided script (Recommended)
+```bash
+node create-admin.mjs
+```
+
+This will:
+- Check database connection
+- Create admin user if it doesn't exist
+- Show you the login credentials
+
+#### Method 2: Using Prisma Studio
 ```bash
 npx prisma studio
 ```
@@ -14,47 +26,66 @@ This will open a web interface at http://localhost:5555 where you can:
 2. Click "Add record"
 3. Fill in:
    - email: `admin@nexoninc.tech`
-   - password: Use this hashed password (for "admin123"): `$2a$10$rOZXqKZJQKZJQKZJQKZJQeN7YqKZJQKZJQKZJQKZJQKZJQKZJQKZ`
+   - password: Use a bcrypt hashed password
 4. Save
 
-### Method 2: Using SQL directly
-```bash
-npx prisma db execute --stdin < admin_user.sql
-```
-
-Where `admin_user.sql` contains:
-```sql
-INSERT INTO User (id, email, password) VALUES 
-('admin-uuid-123', 'admin@nexoninc.tech', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy');
-```
-
-### Method 3: Create a temporary script
-Create `create-admin.mjs` (note the .mjs extension):
-```javascript
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
-
-const prisma = new PrismaClient();
-
-const hashedPassword = await bcrypt.hash('admin123', 10);
-
-await prisma.user.create({
-  data: {
-    email: 'admin@nexoninc.tech',
-    password: hashedPassword,
-  },
-});
-
-console.log('Admin created!');
-await prisma.$disconnect();
-```
-
-Then run: `node create-admin.mjs`
-
-## Login Credentials
+### Local Login Credentials
 - **URL**: http://localhost:3000/admin/login
 - **Email**: admin@nexoninc.tech
 - **Password**: admin123
 
-## Adding Sample Cards
+---
+
+## Production Deployment (Vercel)
+
+### Database Setup
+
+This project uses **PostgreSQL** for production (via Vercel Postgres).
+
+**See [VERCEL_POSTGRES_SETUP.md](./VERCEL_POSTGRES_SETUP.md) for complete deployment instructions.**
+
+### Quick Deployment Steps
+
+1. **Create Vercel Postgres database** in your Vercel dashboard
+2. **Set environment variables** in Vercel:
+   - `DATABASE_URL` (from Vercel Postgres)
+   - `NEXTAUTH_SECRET` (generate with: `openssl rand -base64 32`)
+   - `NEXTAUTH_URL` (your production URL)
+3. **Deploy** via Git push
+4. **Run migrations**:
+   ```bash
+   vercel env pull .env.production
+   npx prisma db push
+   ```
+5. **Create admin user**:
+   ```bash
+   node create-admin.mjs
+   ```
+
+### Production Login
+- **URL**: https://your-domain.vercel.app/admin/login
+- **Email**: admin@nexoninc.tech
+- **Password**: admin123 (⚠️ Change after first login!)
+
+---
+
+## Managing Content
+
+### Adding Cards
 You can add cards through the admin dashboard at `/admin` after logging in.
+
+### Sample Data
+To add sample cards, run:
+```bash
+node add-sample-cards.mjs
+```
+
+---
+
+## Security Notes
+
+⚠️ **IMPORTANT**: 
+- Change the default admin password after first login
+- Use a strong `NEXTAUTH_SECRET` in production (at least 32 characters)
+- Never commit `.env` files to Git
+- Keep your Cloudinary credentials secure
